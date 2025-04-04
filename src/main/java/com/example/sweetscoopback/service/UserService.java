@@ -1,19 +1,23 @@
 package com.example.sweetscoopback.service;
-import com.example.sweetscoopback.entity.Users;
-import com.example.sweetscoopback.repo.UsersRepository;
+import com.example.sweetscoopback.entity.User;
+import com.example.sweetscoopback.repo.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
-public class UsersService {
+public class UserService {
 
     @Autowired
-    private UsersRepository usersRepository;
+    private UserRepository usersRepository;
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public String registerUser(Users user) {
+    public String registerUser(@Valid User user) {
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new IllegalArgumentException("Пароль не может быть null или пустым");
         }
@@ -35,7 +39,11 @@ public class UsersService {
             throw new RuntimeException("Error during registration: " + e.getMessage(), e);
         }
     }
+    public List<User> allUsers () {
+        List<User> users = new ArrayList<>();
+
+        usersRepository.findAll().forEach(users::add);
+
+        return users;
+    }
 }
-
-
-
