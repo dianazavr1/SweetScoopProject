@@ -37,6 +37,20 @@ public class User implements UserDetails { // Переименовал клас�
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Cart cart;
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+        if (cart != null) {
+            cart.setUser(this); // устанавливаем двустороннюю связь
+        }
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

@@ -12,20 +12,20 @@ public class SweetScoopBackApplication {
         // Запуск Spring Boot приложения
         SpringApplication.run(SweetScoopBackApplication.class, args);
 
-        // Пример использования сервиса
-        UserProductsService userProductsService = new UserProductsService();
-
-        // Добавление товаров
-        userProductsService.addProduct("Товар 1", 100.5, 10);
-        userProductsService.addProduct("Товар 2", 200.0, 5);
-
-        // Печать всех товаров
-        System.out.println("Товары пользователя: " + userProductsService.getProducts());
-
-        // Удаление товара
-        userProductsService.removeProduct("Товар 1");
-
-        // Печать всех товаров после удаления
-        System.out.println("Товары пользователя после удаления: " + userProductsService.getProducts());
+//        // Пример использования сервиса
+//        UserProductsService userProductsService = new UserProductsService();
+//
+//        // Добавление товаров
+//        userProductsService.addProduct("Товар 1", 100.5, 10);
+//        userProductsService.addProduct("Товар 2", 200.0, 5);
+//
+//        // Печать всех товаров
+//        System.out.println("Товары пользователя: " + userProductsService.getProducts());
+//
+//        // Удаление товара
+//        userProductsService.removeProduct("Товар 1");
+//
+//        // Печать всех товаров после удаления
+//        System.out.println("Товары пользователя после удаления: " + userProductsService.getProducts());
     }
 }
