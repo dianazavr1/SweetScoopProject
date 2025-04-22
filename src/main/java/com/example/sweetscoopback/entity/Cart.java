@@ -21,6 +21,9 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductBasket> productBaskets = new ArrayList<>();
 
+    @OneToMany(mappedBy = "cart")
+    private List<CartItem> items;
+
     // ——— Геттеры и сеттеры ———
     public Long getId() {
         return id;
@@ -46,7 +49,14 @@ public class Cart {
         this.productBaskets = productBaskets;
     }
 
-    // ——— Методы для управления корзиной ———
+    public List<CartItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<CartItem> items) {
+        this.items = items;
+    }
+// ——— Методы для управления корзиной ———
 
     public void addProduct(Product product, int quantity) {
         ProductBasket basket = new ProductBasket();

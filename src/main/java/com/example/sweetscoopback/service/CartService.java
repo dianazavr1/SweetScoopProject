@@ -1,36 +1,49 @@
 package com.example.sweetscoopback.service;
 
+import com.example.sweetscoopback.dto.CartDTO;
+import com.example.sweetscoopback.entity.Cart;
+import com.example.sweetscoopback.entity.ProductBasket;
 
-import com.example.sweetscoopback.entity.*;
-
+import com.example.sweetscoopback.entity.User;
 import com.example.sweetscoopback.repo.CartRepository;
 import com.example.sweetscoopback.repo.ProductBasketRepository;
-import com.example.sweetscoopback.repo.ProductRepository;
+import com.example.sweetscoopback.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CartService {
 
     @Autowired
-    private ProductBasketRepository productBasketRepository;
-
-    @Autowired
     private CartRepository cartRepository;
 
     @Autowired
-    private ProductRepository productRepository;
+    private ProductBasketRepository productBasketRepository;
 
-    public void addProductToCart(Long cartId, Long productId, int quantity) {
-        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("Cart not found"));
-        Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
+    // Метод для получения корзины по ID
+    public Cart getCartById(Long cartId) {
+        return cartRepository.findById(cartId).orElse(null);
+    }
 
-        ProductBasket pb = new ProductBasket();
-        pb.setCart(cart);
-        pb.setProduct(product);
-        pb.setQuantity(quantity);
+    // Метод для получения всех товаров в корзине через ProductBasket
+    public List<ProductBasket> getAllProductBaskets(Long cartId) {
+        return productBasketRepository.findByCartId(cartId); // Ищем все записи в ProductBasket для данной корзины
+    }
+    @Autowired
+    private UserRepository userRepository;
 
-        productBasketRepository.save(pb);
+    public CartDTO getCartByUserId(int userId) {
+        // Находим пользователя по userId
+        User user = userRepository.findById(userId);
+
+        if (user != null && user.getCart() != null) {
+            // Преобразуем корзину пользователя в CartDTO и возвращаем
+            return new CartDTO(user.getCart());
+        } else {
+            // Если корзина не найдена
+            return null;
+        }
     }
 }
-

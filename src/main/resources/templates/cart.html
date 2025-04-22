@@ -1,0 +1,45 @@
+<!-- resources/templates/cart.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Корзина</title>
+</head>
+<body>
+
+<h1>Корзина покупок</h1>
+
+<div th:if="${cart != null}">
+  <h2>Корзина пользователя</h2>
+  <ul>
+    <li>Пользователь: <span th:text="${cart.user.name}"></span></li>
+    <li>Общее количество товаров: <span th:text="${productBaskets.size()}"></span></li>
+  </ul>
+
+  <h3>Товары в корзине:</h3>
+  <table border="1">
+    <thead>
+    <tr>
+      <th>Название</th>
+      <th>Цена</th>
+      <th>Количество</th>
+      <th>Общая стоимость</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="productBasket : ${productBaskets}">
+      <td th:text="${productBasket.product.name}"></td>
+      <td th:text="${productBasket.product.price}"></td>
+      <td th:text="${productBasket.quantity}"></td>
+      <td th:text="${productBasket.product.price * productBasket.quantity}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div th:if="${error != null}">
+  <p th:text="${error}"></p>
+</div>
+
+</body>
+</html>

@@ -34,35 +34,29 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Отключаем защиту CSRF (нужно при работе с REST API)
                 .csrf(csrf -> csrf.disable())
-
-                // Указываем, какие запросы разрешены без авторизации
                 .authorizeHttpRequests(auth -> auth
-                        // Разрешаем доступ к эндпоинтам, связанным с аутентификацией (регистрация, логин)
+                        // Разрешаем доступ к аутентификации
                         .requestMatchers("/auth/**").permitAll()
 
-                        // Разрешаем доступ к корзине и продуктам для всех пользователей
+                        // Разрешаем доступ к корзине по новому пути
+                        .requestMatchers("/api/cart/**").permitAll()
+
+                        // Разрешаем доступ к продуктам (если у тебя такой путь есть)
                         .requestMatchers("/cart/**", "/products/**").permitAll()
 
                         // Все остальные запросы требуют авторизации
                         .anyRequest().authenticated()
                 )
-
-                // Указываем, что сессии не будут использоваться — всё через JWT
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
-                // Устанавливаем провайдер аутентификации
                 .authenticationProvider(authenticationProvider)
-
-                // Добавляем наш JWT-фильтр до стандартного фильтра логина/пароля
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        // Возвращаем построенную цепочку фильтров
         return http.build();
     }
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
