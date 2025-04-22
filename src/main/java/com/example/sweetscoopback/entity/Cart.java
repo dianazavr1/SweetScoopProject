@@ -1,8 +1,11 @@
 package com.example.sweetscoopback.entity;
+import com.example.sweetscoopback.entity.Product;
+import com.example.sweetscoopback.entity.ProductBasket;
+import com.example.sweetscoopback.entity.User;
 import jakarta.persistence.*;
-import java.util.List;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Cart {
@@ -12,11 +15,11 @@ public class Cart {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true) // связь с пользователем
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Product> products = new ArrayList<>(); // инициализируем, чтобы не было NullPointerException
+    private List<ProductBasket> productBaskets = new ArrayList<>();
 
     // ——— Геттеры и сеттеры ———
     public Long getId() {
@@ -35,23 +38,25 @@ public class Cart {
         this.user = user;
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<ProductBasket> getProductBaskets() {
+        return productBaskets;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void setProductBaskets(List<ProductBasket> productBaskets) {
+        this.productBaskets = productBaskets;
     }
 
-    // ——— Удобные методы ———
+    // ——— Методы для управления корзиной ———
 
-    public void addProduct(Product product) {
-        products.add(product);
-        product.setCart(this); // устанавливаем связь
+    public void addProduct(Product product, int quantity) {
+        ProductBasket basket = new ProductBasket();
+        basket.setProduct(product);
+        basket.setCart(this);
+        basket.setQuantity(quantity);
+        productBaskets.add(basket);
     }
 
     public void removeProduct(Product product) {
-        products.remove(product);
-        product.setCart(null); // убираем связь
+        productBaskets.removeIf(pb -> pb.getProduct().equals(product));
     }
 }

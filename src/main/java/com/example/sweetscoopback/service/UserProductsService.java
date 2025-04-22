@@ -14,11 +14,11 @@ public class UserProductsService {
         this.products = new ArrayList<>();
     }
 
-    public void addProduct(Cart cart, String name, double price, int quantity) {
-        Product newProduct = new Product(name, price, quantity);
-        newProduct.setCart(cart); // теперь тип совпадает
-        cart.getProducts().add(newProduct); // добавляем в корзину
-    }
+//    public void addProduct(Cart cart, String name, double price, int quantity) {
+//        Product newProduct = new Product(name, price, quantity);
+//        newProduct.setCart(cart); // теперь тип совпадает
+//        cart.getProducts().add(newProduct); // добавляем в корзину
+//    }
 
 
     // Удаление товара по имени

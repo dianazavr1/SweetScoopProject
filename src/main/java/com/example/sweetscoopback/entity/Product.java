@@ -3,6 +3,8 @@ package com.example.sweetscoopback.entity;
 import com.example.sweetscoopback.service.UserProductsService;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Product {
 
@@ -14,9 +16,15 @@ public class Product {
     private double price;
     private int quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id") // Ссылаемся на корзину через внешний ключ
-    private Cart cart;
+    @OneToMany(mappedBy = "product")
+    private List<ProductBasket> productBaskets;
+
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "cart_id") // Ссылаемся на корзину через внешний ключ
+    //  private Cart cart;
+
+
 
     // Конструктор для создания продукта
     public Product(String name, double price, int quantity) {
@@ -25,15 +33,11 @@ public class Product {
         this.quantity = quantity;
     }
 
-    // Сеттер для корзины
-    public void setCart(Cart cart) {
-        this.cart = cart;
+    public Product() {
+
     }
 
-    // Геттер для корзины
-    public Cart getCart() {
-        return cart;
-    }
+
 
     // Геттер для name
     public String getName() {
