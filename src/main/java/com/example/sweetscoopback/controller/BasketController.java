@@ -3,6 +3,7 @@ package com.example.sweetscoopback.controller;
 import com.example.sweetscoopback.entity.Product;
 import com.example.sweetscoopback.service.TotalBasketService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,5 +44,13 @@ public class BasketController {
     public String clearBasket() {
         basketService.clearBasket();
         return "Корзина очищена";
+    }
+    // Оформление заказа
+    @PostMapping("/checkout")
+    public ResponseEntity<String> checkout() {
+        // Логика оформления заказа (например, создание записи в базе данных, отправка подтверждения)
+        // Например, очищаем корзину после оформления
+        basketService.clearBasket();
+        return ResponseEntity.ok("Заказ оформлен успешно!");
     }
 }
