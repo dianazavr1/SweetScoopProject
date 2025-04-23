@@ -100,6 +100,19 @@ public class CartService {
         }
     }
 
+    public boolean updateProductQuantity(Long userId, Long productId, int quantity) {
+        Optional<Cart> cart = cartRepository.findByUserId(userId);
+        if (cart.isEmpty()) return false;
+
+        CartItem item = cartItemRepository.findByCartIdAndProductId(cart.get().getId(), productId);
+        if (item == null) return false;
+
+        item.setQuantity(quantity);
+        cartItemRepository.save(item);
+        return true;
+    }
+
+
 
 
 }

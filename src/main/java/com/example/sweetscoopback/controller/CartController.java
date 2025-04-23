@@ -2,6 +2,7 @@ package com.example.sweetscoopback.controller;
 
 import com.example.sweetscoopback.dto.AddProductToCartRequest;
 import com.example.sweetscoopback.dto.CartDTO;
+import com.example.sweetscoopback.dto.UpdateCartQuantityRequest;
 import com.example.sweetscoopback.entity.Product;
 import com.example.sweetscoopback.entity.User;
 import com.example.sweetscoopback.service.CartService;
@@ -90,6 +91,19 @@ public class CartController {
         } else {
             // Если что-то пошло не так — возвращаем статус 500 (Internal Server Error)
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to remove product");
+        }
+    }
+    @PutMapping("/{userId}/update")
+    public ResponseEntity<String> updateProductQuantity(
+            @PathVariable Long userId,
+            @RequestBody UpdateCartQuantityRequest request) {
+
+        boolean updated = cartService.updateProductQuantity(userId, request.getProductId(), request.getQuantity());
+
+        if (updated) {
+            return ResponseEntity.ok("Quantity updated");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found in cart");
         }
     }
 
