@@ -45,6 +45,8 @@ public class SecurityConfiguration {
                         // Разрешаем доступ к продуктам (если у тебя такой путь есть)
                         .requestMatchers("/cart/**", "/products/**").permitAll()
 
+                        .requestMatchers("/basket/**").permitAll()
+
                         // Все остальные запросы требуют авторизации
                         .anyRequest().authenticated()
                 )
