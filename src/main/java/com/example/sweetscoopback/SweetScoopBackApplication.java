@@ -1,5 +1,6 @@
 package com.example.sweetscoopback;
 
+import com.example.sweetscoopback.entity.Product;
 import com.example.sweetscoopback.service.TotalBasketService;
 import com.example.sweetscoopback.service.UserProductsService;
 import org.springframework.boot.SpringApplication;
@@ -13,14 +14,19 @@ public class SweetScoopBackApplication {
         // Запуск Spring Boot приложения
         SpringApplication.run(SweetScoopBackApplication.class, args);
 
+        // Создаем товары
+        Product product1 = new Product("Телефон", 500.0, 2); // 2 телефона по 500.0
+        Product product2 = new Product("Ноутбук", 1200.0, 1); // 1 ноутбук за 1200.0
+        Product product3 = new Product("Наушники", 150.0, 3); // 3 наушника по 150.0
+
+        // Создаем корзину и добавляем товары
         TotalBasketService basket = new TotalBasketService();
+        basket.addProduct(product1);
+        basket.addProduct(product2);
+        basket.addProduct(product3);
 
-        basket.addAmount(100.50);
-        basket.addAmount(50.75);
-        basket.printTotal();  // Вывод: Итоговая сумма корзины: 151.25
-
-        basket.clearBasket();
-        basket.printTotal();  // Вывод: Итоговая сумма корзины: 0.0
+        // Выводим итоговую сумму корзины
+        basket.printTotal();  // Итоговая сумма корзины: 3300.0
     }
 
 }

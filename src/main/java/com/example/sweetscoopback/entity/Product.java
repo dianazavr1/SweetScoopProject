@@ -78,4 +78,8 @@ public class Product {
     public void setId(Long id) {
         this.id = id;
     }
+    // Метод для подсчета стоимости товара
+    public double getTotalPrice() {
+        return price * quantity;
+    }
 }
