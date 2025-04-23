@@ -69,4 +69,6 @@ public class Cart {
     public void removeProduct(Product product) {
         productBaskets.removeIf(pb -> pb.getProduct().equals(product));
     }
+
+
 }

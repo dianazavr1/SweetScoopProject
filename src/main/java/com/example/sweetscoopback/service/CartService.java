@@ -80,4 +80,26 @@ public class CartService {
 
         return true;
     }
+    public boolean removeProductFromCart(User user, Product product) {
+        Cart cart = user.getCart();
+        if (cart == null) return false;
+
+        // Предположим, у Cart есть список cartItems
+        List<CartItem> items = cart.getItems();
+
+        Optional<CartItem> itemToRemove = items.stream()
+                .filter(item -> item.getProduct().getId().equals(product.getId()))
+                .findFirst();
+
+        if (itemToRemove.isPresent()) {
+            items.remove(itemToRemove.get());
+            cartRepository.save(cart); // если cart обновляется через репозиторий
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
 }

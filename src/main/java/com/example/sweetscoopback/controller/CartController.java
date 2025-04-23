@@ -60,6 +60,39 @@ public class CartController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding product to cart");
         }
     }
+
+    // Обрабатывает HTTP DELETE запрос по маршруту /cart/{userId}/remove/{productId}
+// Используется для удаления товара из корзины конкретного пользователя
+    @DeleteMapping("/{userId}/remove/{productId}")
+    public ResponseEntity<String> removeProductFromCart(
+            @PathVariable Long userId,         // ID пользователя, переданный в URL
+            @PathVariable Long productId) {    // ID продукта, который нужно удалить
+
+        // Получаем пользователя по ID
+        User user = userService.getEntityUserById(userId);
+        if (user == null) {
+            // Если пользователь не найден, возвращаем статус 404 (Not Found)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        // Получаем продукт по ID
+        Product product = userProductsService.getProductById(productId);
+        if (product == null) {
+            // Если продукт не найден, возвращаем статус 404 (Not Found)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+        }
+
+        // Пытаемся удалить товар из корзины пользователя
+        boolean removed = cartService.removeProductFromCart(user, product);
+        if (removed) {
+            // Если удаление прошло успешно, возвращаем 200 OK
+            return ResponseEntity.ok("Product removed from cart");
+        } else {
+            // Если что-то пошло не так — возвращаем статус 500 (Internal Server Error)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to remove product");
+        }
     }
+
+}
 
 
