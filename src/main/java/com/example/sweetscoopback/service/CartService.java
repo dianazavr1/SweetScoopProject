@@ -1,10 +1,9 @@
 package com.example.sweetscoopback.service;
 
 import com.example.sweetscoopback.dto.CartDTO;
-import com.example.sweetscoopback.entity.Cart;
-import com.example.sweetscoopback.entity.ProductBasket;
+import com.example.sweetscoopback.entity.*;
 
-import com.example.sweetscoopback.entity.User;
+import com.example.sweetscoopback.repo.CartItemRepository;
 import com.example.sweetscoopback.repo.CartRepository;
 import com.example.sweetscoopback.repo.ProductBasketRepository;
 import com.example.sweetscoopback.repo.UserRepository;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartService {
@@ -21,6 +21,9 @@ public class CartService {
 
     @Autowired
     private ProductBasketRepository productBasketRepository;
+    @Autowired
+    private CartItemRepository cartItemRepository;
+
 
     // Метод для получения корзины по ID
     public Cart getCartById(Long cartId) {
@@ -45,5 +48,36 @@ public class CartService {
             // Если корзина не найдена
             return null;
         }
+    }
+
+
+    // Метод для добавления товара в корзину
+    public boolean addProductToCart(User user, Product product, int quantity) {
+        // Получаем корзину пользователя
+        Cart cart = user.getCart();
+        if (cart == null) {
+            // Если у пользователя нет корзины, создаем новую
+            cart = new Cart();
+            cart.setUser(user);
+            cartRepository.save(cart);
+        }
+
+        // Проверяем, есть ли уже этот товар в корзине
+        Optional<CartItem> existingItem = cartItemRepository.findByCartAndProduct(cart, product);
+        if (existingItem.isPresent()) {
+            // Если товар уже есть в корзине, увеличиваем его количество
+            CartItem cartItem = existingItem.get();
+            cartItem.setQuantity(cartItem.getQuantity() + quantity);
+            cartItemRepository.save(cartItem);
+        } else {
+            // Если товара нет в корзине, добавляем новый элемент
+            CartItem cartItem = new CartItem();
+            cartItem.setCart(cart);
+            cartItem.setProduct(product);
+            cartItem.setQuantity(quantity);
+            cartItemRepository.save(cartItem);
+        }
+
+        return true;
     }
 }

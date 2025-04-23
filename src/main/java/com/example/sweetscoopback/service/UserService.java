@@ -70,6 +70,9 @@ public class UserService {
             return null; // или выбросить исключение
         }
     }
+    public User getEntityUserById(Long userId) {
+        return usersRepository.findById(userId).orElse(null);
+    }
 
     public List<User> allUsers () {
         List<User> users = new ArrayList<>();

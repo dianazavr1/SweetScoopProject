@@ -1,7 +1,11 @@
 package com.example.sweetscoopback.controller;
 
+import com.example.sweetscoopback.dto.AddProductToCartRequest;
 import com.example.sweetscoopback.dto.CartDTO;
+import com.example.sweetscoopback.entity.Product;
+import com.example.sweetscoopback.entity.User;
 import com.example.sweetscoopback.service.CartService;
+import com.example.sweetscoopback.service.UserProductsService;
 import com.example.sweetscoopback.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,9 +16,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/cart")
 public class CartController {
 
-
         @Autowired
         private CartService cartService;
+        @Autowired
+        private UserService userService;
+        @Autowired
+        private UserProductsService userProductsService;
+
 
         @GetMapping("/{userId}")
         public ResponseEntity<CartDTO> getCartByUserId(@PathVariable int userId) {
@@ -27,6 +35,31 @@ public class CartController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Если корзина не найдена
             }
         }
+    // Метод для добавления товара в корзину
+    @PostMapping("/{userId}/add")
+    public ResponseEntity<String> addProductToCart(@PathVariable Long userId, @RequestBody AddProductToCartRequest request) {
+        // Получаем пользователя по userId
+        User user = userService.getEntityUserById(userId);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+
+        // Получаем товар по productId
+        Product product = userProductsService.getProductById(request.getProductId());
+        if (product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+        }
+
+        // Добавляем товар в корзину пользователя
+        boolean success = cartService.addProductToCart(user, product, request.getQuantity());
+        if (success) {
+            return ResponseEntity.ok("Product added to cart");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding product to cart");
+        }
+    }
     }
 
 
